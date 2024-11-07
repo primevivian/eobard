@@ -6,9 +6,9 @@
 	(paper "A4")
 	(title_block
 		(title "Eobard Split Keyboard")
-		(date "2024-03-25")
+		(date "2024-11-07")
 		(rev "1.3")
-		(company "by viniciusbrit")
+		(company "by primevivian")
 		(comment 4 "This constitutes the design of a single half of a split keyboard.")
 	)
 	(lib_symbols
