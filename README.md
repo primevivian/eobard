@@ -9,9 +9,9 @@ Eobard is an ortholinear 34 key split keyboard made for my personal needs. Inspi
 The columns are spaced out vertically so as to provide the most comfortable typing experience for my hand size. It is designed to be cheap to manufacture and simple to assemble. The single PCB is dual sided, only having to be flipped around for assembly of the other side.
 
 ## Project Updates
-Coming back to work on this after a few months, life got in the way. I've lost interest in split minimalist keyboards like this after thoroughly using my first prototype since then. These are too limiting for my use case.
+I've lost interest in split minimalist keyboards like this after thoroughly using my first prototype since then. These are too limiting for my use case.
 I still want to finish this project and polish all that needs to be polished. The board design is done (has been for a while), removing the diodes from the previous version, as the Pico board had enough pins to directly wire each switch, and the OLED screen which was kinda useless when the point is to not look at your keyboard.
-My KiCad can't seem to render the new gerber files properly so I can't update the project images just yet.
+As it stands, it just needs firmware to be done but I will not be making any contributions to this any time soon.
 
 <details>
 <summary>Project Tasks</summary>
