@@ -4,7 +4,7 @@
 # ██      ██    ██ ██   ██ ██   ██ ██   ██ ██   ██     ██      ██ ███ ██ 
 # ███████  ██████  ██████  ██   ██ ██   ██ ██████      ██       ███ ███  
 #                         
-## Written by viniciusbrit, 2024
+## Written by primevivian, 2024
 ## en_US Layout
 
 print("Starting")
