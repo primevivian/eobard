@@ -1,15 +1,12 @@
 # Meet Eobard, a split 34 key ortholinear keyboard.
 Current Hardware Revision: 1.0
 
-<img src="https://github.com/viniciusbrit/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Keyboard.jpg" width="75%">
+<img src="https://github.com/primevivian/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Keyboard.jpg" width="75%">
 
 ## Project Description
 Eobard is an ortholinear 34 key split keyboard made for my personal needs. Inspired by the [Ferris](https://github.com/pierrechevalier83/ferris).
 
 The columns are spaced out vertically so as to provide the most comfortable typing experience for my hand size. It is designed to be cheap to manufacture and simple to assemble. The single PCB is dual sided, only having to be flipped around for assembly of the other side.
-
-## Project Updates
-Work has resumed. I've updated project tasks to align with my current goals for eventually having a clean release of these files.
 
 <details>
 <summary>Project Tasks</summary>
@@ -22,13 +19,7 @@ Work has resumed. I've updated project tasks to align with my current goals for 
 - [ ] Release First Version.
 </details>
 
-## Images (First Prototype)
-<img src="https://github.com/viniciusbrit/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Front%20and%20Back.jpg" width="75%">
-<img src="https://github.com/viniciusbrit/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Board-Images/eobard_front.jpg" width="75%">
-<img src="https://github.com/viniciusbrit/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Board-Images/eobard_back.jpg" width="75%">
-<img src="https://github.com/viniciusbrit/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Plate-Images/eobard-plate_front.jpg" width="75%">
-
-## Bill of Materials (To be updated)
+## Bill of Materials 
 * Raspberry Pi Pico [x2]
 * [PJ-320A 3.5mm Audio Jack [x2]](https://www.lcsc.com/product-detail/Audio-Connectors_Hong-Cheng-HC-PJ-320A_C7501806.html)
 * Cherry MX Style Switches [x34]
