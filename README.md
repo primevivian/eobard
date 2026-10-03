@@ -14,9 +14,10 @@ Work has resumed. I've updated project tasks to align with my current goals for 
 <details>
 <summary>Project Tasks</summary>
 
-- [ ] Update files to KiCad 10.
-- [ ] Update footprints to comply with more standard libraries and parts. 
-- [ ] Simplify design as much as possible.
+- [x] Update files to KiCad 10.0.
+- [x] Update footprints to comply with more standard libraries and parts. 
+- [x] Simplify design as much as possible.
+- [ ] Build diodeless prototype.
 - [ ] Write Firmware in C.
 - [ ] Release First Version.
 </details>
