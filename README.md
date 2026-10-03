@@ -9,19 +9,15 @@ Eobard is an ortholinear 34 key split keyboard made for my personal needs. Inspi
 The columns are spaced out vertically so as to provide the most comfortable typing experience for my hand size. It is designed to be cheap to manufacture and simple to assemble. The single PCB is dual sided, only having to be flipped around for assembly of the other side.
 
 ## Project Updates
-I've lost interest in split minimalist keyboards like this after thoroughly using my first prototype since then. These are too limiting for my use case.
-I still want to finish this project and polish all that needs to be polished. The board design is done (has been for a while), removing the diodes from the previous version, as the Pico board had enough pins to directly wire each switch, and the OLED screen which was kinda useless when the point is to not look at your keyboard.
-As it stands, it just needs firmware to be done but I will not be making any contributions to this any time soon.
+Work has resumed. I've updated project tasks to align with my current goals for eventually having a clean release of these files.
 
 <details>
 <summary>Project Tasks</summary>
 
-- [x] Design Layout. 
-- [x] Design PCB & Plate.
-- [x] Generate Gerbers.
-- [ ] Build Prototype.
-- [ ] Write Firmware.
-- [ ] Write Build Guide with images.
+- [ ] Update files to KiCad 10.
+- [ ] Update footprints to comply with more standard libraries and parts. 
+- [ ] Simplify design as much as possible.
+- [ ] Write Firmware in C.
 - [ ] Release First Version.
 </details>
 
@@ -31,7 +27,7 @@ As it stands, it just needs firmware to be done but I will not be making any con
 <img src="https://github.com/viniciusbrit/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Board-Images/eobard_back.jpg" width="75%">
 <img src="https://github.com/viniciusbrit/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Plate-Images/eobard-plate_front.jpg" width="75%">
 
-## Bill of Materials
+## Bill of Materials (To be updated)
 * Raspberry Pi Pico [x2]
 * [PJ-320A 3.5mm Audio Jack [x2]](https://www.lcsc.com/product-detail/Audio-Connectors_Hong-Cheng-HC-PJ-320A_C7501806.html)
 * Cherry MX Style Switches [x34]
