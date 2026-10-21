@@ -13,7 +13,7 @@ The columns are spaced out vertically so as to provide the most comfortable typi
 - [x] Update files to KiCad 10.0.
 - [x] Update footprints to comply with more standard libraries and parts. 
 - [x] Simplify design as much as possible.
-- [x] Rewrite old KMK Firmware to C, for diode based fist prototype.
+- [x] Rewrite old KMK Firmware to C, for diode based first prototype.
 - [ ] Write Diodeless Firmware in C.
 - [ ] Release First Version.
 </details>
