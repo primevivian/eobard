@@ -23,7 +23,9 @@
  *
  */
 
-#include "bsp/board_api.h"
+#include <string.h>
+
+#include "pico/unique_id.h"
 #include "tusb.h"
 #include "usb_descriptors.h"
 
@@ -77,10 +79,7 @@ uint8_t const * tud_descriptor_device_cb(void)
 
 uint8_t const desc_hid_report[] =
 {
-  TUD_HID_REPORT_DESC_KEYBOARD( HID_REPORT_ID(REPORT_ID_KEYBOARD         )),
-  TUD_HID_REPORT_DESC_MOUSE   ( HID_REPORT_ID(REPORT_ID_MOUSE            )),
-  TUD_HID_REPORT_DESC_CONSUMER( HID_REPORT_ID(REPORT_ID_CONSUMER_CONTROL )),
-  TUD_HID_REPORT_DESC_GAMEPAD ( HID_REPORT_ID(REPORT_ID_GAMEPAD          ))
+  TUD_HID_REPORT_DESC_KEYBOARD( HID_REPORT_ID(REPORT_ID_KEYBOARD ))
 };
 
 // Invoked when received GET HID REPORT DESCRIPTOR
@@ -190,8 +189,8 @@ enum {
 char const *string_desc_arr[] =
 {
   (const char[]) { 0x09, 0x04 }, // 0: is supported language is English (0x0409)
-  "TinyUSB",                     // 1: Manufacturer
-  "TinyUSB Device",              // 2: Product
+  "primevivian",                 // 1: Manufacturer
+  "Eobard",                      // 2: Product
   NULL,                          // 3: Serials will use unique ID if possible
 };
 
@@ -210,8 +209,17 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
       break;
 
     case STRID_SERIAL:
-      chr_count = board_usb_get_serial(_desc_str + 1, 32);
-      break;
+    {
+      // Use the flash chip's unique ID as serial
+      char serial[2 * PICO_UNIQUE_BOARD_ID_SIZE_BYTES + 1];
+      pico_get_unique_board_id_string(serial, sizeof(serial));
+
+      chr_count = strlen(serial);
+      for ( size_t i = 0; i < chr_count; i++ ) {
+        _desc_str[1 + i] = serial[i];
+      }
+    }
+    break;
 
     default:
       // Note: the 0xEE index string is a Microsoft OS 1.0 Descriptors.
