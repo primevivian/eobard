@@ -1,5 +1,4 @@
 # Meet Eobard, a split 34 key ortholinear keyboard.
-Current Hardware Revision: 1.0
 
 <img src="https://github.com/primevivian/eobard/blob/54abefa3f9322f3dde9a3adc79b1acc81ec4291c/Images/Keyboard.jpg" width="75%">
 
@@ -14,8 +13,8 @@ The columns are spaced out vertically so as to provide the most comfortable typi
 - [x] Update files to KiCad 10.0.
 - [x] Update footprints to comply with more standard libraries and parts. 
 - [x] Simplify design as much as possible.
-- [ ] Build diodeless prototype.
-- [ ] Write Firmware in C.
+- [x] Rewrite old KMK Firmware to C, for diode based fist prototype.
+- [ ] Write Diodeless Firmware in C.
 - [ ] Release First Version.
 </details>
 
