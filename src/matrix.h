@@ -1,4 +1,4 @@
-// Key matrix scanning for one half
+// Switch scanning for one half
 
 #ifndef MATRIX_H_
 #define MATRIX_H_
@@ -8,7 +8,7 @@
 
 void matrix_init(void);
 
-// Debounced keys of this half, bit (row * MATRIX_COLS + col) per key
+// Debounced keys of this half, bit n for switch SW(n + 1)
 uint32_t matrix_scan(uint32_t now_ms);
 
 // Join both halves into keymap positions, bit n per position

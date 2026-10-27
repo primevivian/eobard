@@ -1,42 +1,24 @@
-// Key matrix scanning for the diode prototype
+// Switch scanning for the diodeless PCB, every switch on its own pin
 
 #include "pico/stdlib.h"
 
 #include "config.h"
 #include "matrix.h"
 
-static const uint row_pins[MATRIX_ROWS] = MATRIX_ROW_PINS;
-static const uint col_pins[MATRIX_COLS] = MATRIX_COL_PINS;
+// Split frame carries 24 bits of keys per half
+_Static_assert(NUM_SWITCHES <= 24, "too many switches for the split frame");
+_Static_assert(NUM_SWITCHES <= KEYMAP_ROWS * KEYMAP_COLS, "too many switches for the keymap");
+
+static const uint switch_pins[NUM_SWITCHES] = SWITCH_PINS;
 
 void matrix_init(void)
 {
-  // Rows read high until a key pulls them low
-  for (uint r = 0; r < MATRIX_ROWS; r++)
+  // Pins read high until a switch pulls them to GND
+  for (uint sw = 0; sw < NUM_SWITCHES; sw++)
   {
-    gpio_init(row_pins[r]);
-    gpio_set_dir(row_pins[r], GPIO_IN);
-    gpio_pull_up(row_pins[r]);
-  }
-
-  // Columns sit pulled up until scanned, only one driven at a time
-  for (uint c = 0; c < MATRIX_COLS; c++)
-  {
-    gpio_init(col_pins[c]);
-    gpio_set_dir(col_pins[c], GPIO_IN);
-    gpio_pull_up(col_pins[c]);
-    gpio_put(col_pins[c], 0);
-  }
-}
-
-// Wait for rows to go back high so the next column reads clean
-static void matrix_wait_rows_high(void)
-{
-  for (uint t = 0; t < 50; t++) // give up after ~50us
-  {
-    bool all_high = true;
-    for (uint r = 0; r < MATRIX_ROWS; r++) all_high &= gpio_get(row_pins[r]);
-    if (all_high) return;
-    sleep_us(1);
+    gpio_init(switch_pins[sw]);
+    gpio_set_dir(switch_pins[sw], GPIO_IN);
+    gpio_pull_up(switch_pins[sw]);
   }
 }
 
@@ -44,20 +26,9 @@ static uint32_t matrix_read(void)
 {
   uint32_t keys = 0;
 
-  for (uint c = 0; c < MATRIX_COLS; c++)
+  for (uint sw = 0; sw < NUM_SWITCHES; sw++)
   {
-    // Drive column low, held keys pull their row low through the diode
-    gpio_set_dir(col_pins[c], GPIO_OUT);
-    sleep_us(5); // settle time
-
-    for (uint r = 0; r < MATRIX_ROWS; r++)
-    {
-      if (!gpio_get(row_pins[r])) keys |= 1u << (r * MATRIX_COLS + c);
-    }
-
-    // Release column back to its pull-up, a floating column ghosts into the next one
-    gpio_set_dir(col_pins[c], GPIO_IN);
-    matrix_wait_rows_high();
+    if (!gpio_get(switch_pins[sw])) keys |= 1u << sw;
   }
 
   return keys;
@@ -87,19 +58,16 @@ uint64_t matrix_to_positions(uint32_t left_keys, uint32_t right_keys)
 {
   uint64_t positions = 0;
 
-  for (uint r = 0; r < MATRIX_ROWS; r++)
+  for (uint sw = 0; sw < NUM_SWITCHES; sw++)
   {
-    for (uint c = 0; c < MATRIX_COLS; c++)
-    {
-      uint const key = r * MATRIX_COLS + c;
-      uint const row_start = r * MATRIX_COLS * 2;
+    uint const c = sw % KEYMAP_COLS;
+    uint const row_start = (sw / KEYMAP_COLS) * KEYMAP_COLS * 2;
 
-      // Left half takes the first five columns of each row
-      if (left_keys & (1u << key)) positions |= 1ull << (row_start + c);
+    // Left half takes the first five columns of each row
+    if (left_keys & (1u << sw)) positions |= 1ull << (row_start + c);
 
-      // Right half is the same PCB flipped, so its columns run backwards
-      if (right_keys & (1u << key)) positions |= 1ull << (row_start + MATRIX_COLS * 2 - 1 - c);
-    }
+    // Right half is the same PCB flipped, so its columns run backwards
+    if (right_keys & (1u << sw)) positions |= 1ull << (row_start + KEYMAP_COLS * 2 - 1 - c);
   }
 
   return positions;
