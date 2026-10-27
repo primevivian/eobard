@@ -54,10 +54,20 @@
 // Tap under this, hold over it (KMK default)
 #define TAPPING_TERM_MS   300
 
+/// BOOTSEL Key
+
+// Must be held this long to reboot, so rolling onto it by accident does nothing
+#define BOOTSEL_HOLD_MS   1000
+
 /// Debug
 
-// Printed over UART on GP0/GP1 at 115200 baud
+// Printed over UART on GP0/GP1 at 115200 baud, Debug builds only
+// Release builds define NDEBUG, so the .uf2 files people flash stay quiet
+#ifdef NDEBUG
+#define DEBUG_ENABLED     0
+#else
 #define DEBUG_ENABLED     1
+#endif
 
 #define DEBUG_PRINT(...) do { if (DEBUG_ENABLED) printf(__VA_ARGS__); } while (0)
 

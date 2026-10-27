@@ -10,6 +10,9 @@
 
 #define REPORT_QUEUE_SIZE  16
 
+// layer_state has a bit per layer
+_Static_assert(NUM_LAYERS <= 8, "too many layers for layer_state");
+
 static uint8_t layer_state = 1u << 0;         // bit per active layer, base always on
 static keycode_t pressed_as[NUM_KEYS];        // what each held position was on press
 static keycode_t registered[NUM_KEYS];        // what each position is sending right now
@@ -21,6 +24,13 @@ static struct
   uint8_t pos;
   uint32_t press_ms;
 } pending_lt;
+
+// BOOTSEL key held but not long enough to reboot
+static struct
+{
+  bool active;
+  uint32_t press_ms;
+} pending_bootsel;
 
 static hid_keyboard_report_t report_queue[REPORT_QUEUE_SIZE];
 static uint report_head = 0;
@@ -55,12 +65,15 @@ static void queue_report(void)
 
   if (report_count == REPORT_QUEUE_SIZE)
   {
-    DEBUG_PRINT("keyboard: report queue full, dropping report\n");
-    return;
+    // Host isn't reading, overwrite the newest report so it still ends on the real key state
+    DEBUG_PRINT("keyboard: report queue full, replacing newest report\n");
+    report_queue[(report_head + report_count - 1) % REPORT_QUEUE_SIZE] = report;
+  }else
+  {
+    report_queue[(report_head + report_count) % REPORT_QUEUE_SIZE] = report;
+    report_count++;
   }
 
-  report_queue[(report_head + report_count) % REPORT_QUEUE_SIZE] = report;
-  report_count++;
   last_report = report;
 }
 
@@ -112,10 +125,23 @@ static void pending_lt_hold(void)
 
 /// Key Events
 
+// Mods of shifted symbols only apply to the symbol itself,
+// drop them from held keys so they don't shift the next one
+static void clear_symbol_mods(void)
+{
+  for (uint pos = 0; pos < NUM_KEYS; pos++)
+  {
+    // Keys without a usage are pure modifiers like KEY_HYPER, those stay
+    if (KEY_USAGE(registered[pos]) != HID_KEY_NONE) registered[pos] = KEY_USAGE(registered[pos]);
+  }
+}
+
 static void key_pressed(uint pos, uint32_t now_ms)
 {
   // Another key interrupts an undecided layer tap, make it a hold
   if (pending_lt.active) pending_lt_hold();
+
+  clear_symbol_mods();
 
   keycode_t const kc = keymap_lookup(pos);
   pressed_as[pos] = kc;
@@ -129,8 +155,9 @@ static void key_pressed(uint pos, uint32_t now_ms)
     pending_lt.press_ms = now_ms;
   }else if (kc == KEY_BOOTSEL)
   {
-    DEBUG_PRINT("keyboard: rebooting into BOOTSEL\n");
-    reset_usb_boot(0, 0);
+    // Only reboots once held, so rolling onto it can't trigger it
+    pending_bootsel.active = true;
+    pending_bootsel.press_ms = now_ms;
   }else
   {
     registered[pos] = kc;
@@ -159,6 +186,9 @@ static void key_released(uint pos)
     {
       layer_off(KEY_LT_LAYER(kc));
     }
+  }else if (kc == KEY_BOOTSEL)
+  {
+    pending_bootsel.active = false;
   }else
   {
     registered[pos] = HID_KEY_NONE;
@@ -173,16 +203,25 @@ void keyboard_task(uint64_t keys, uint32_t now_ms)
   // Held past the tapping term, make it a hold
   if (pending_lt.active && now_ms - pending_lt.press_ms >= TAPPING_TERM_MS) pending_lt_hold();
 
-  uint64_t const changed = keys ^ last_keys;
-  if (!changed) return;
+  if (pending_bootsel.active && now_ms - pending_bootsel.press_ms >= BOOTSEL_HOLD_MS)
+  {
+    DEBUG_PRINT("keyboard: rebooting into BOOTSEL\n");
+    reset_usb_boot(0, 0);
+  }
+
+  uint64_t const released = last_keys & ~keys;
+  uint64_t const pressed = keys & ~last_keys;
+
+  // Changes arrive in batches, do releases first since a release and press
+  // in one batch is nearly always a typing roll
+  for (uint pos = 0; pos < NUM_KEYS; pos++)
+  {
+    if (released & (1ull << pos)) key_released(pos);
+  }
 
   for (uint pos = 0; pos < NUM_KEYS; pos++)
   {
-    uint64_t const bit = 1ull << pos;
-    if (!(changed & bit)) continue;
-
-    if (keys & bit) key_pressed(pos, now_ms);
-    else key_released(pos);
+    if (pressed & (1ull << pos)) key_pressed(pos, now_ms);
   }
 
   last_keys = keys;

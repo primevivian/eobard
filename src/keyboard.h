@@ -32,7 +32,7 @@ typedef uint16_t keycode_t;
 /// Special Keys
 
 #define KEY_TRANSPARENT     ((keycode_t) 0x2000) // falls through to the layer below
-#define KEY_BOOTSEL         ((keycode_t) 0x2001) // reboot into BOOTSEL
+#define KEY_BOOTSEL         ((keycode_t) 0x2001) // reboot into BOOTSEL once held BOOTSEL_HOLD_MS
 
 // Ctrl + Shift + Alt + GUI
 #define KEY_HYPER           MODS(KEYBOARD_MODIFIER_LEFTCTRL | KEYBOARD_MODIFIER_LEFTSHIFT | \

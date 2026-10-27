@@ -4,9 +4,7 @@
 // Based on dev_hid_composite from pico-examples
 // Both halves run this loop, the one on USB sends both halves' keys to the host
 
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 
 #include "pico/stdlib.h"
 #include "tusb.h"
