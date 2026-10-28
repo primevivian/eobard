@@ -1,0 +1,10 @@
+# VS Code settings, local to each machine
+.vscode/
+
+# KiCad backups, caches and local settings
+*-backups/
+.history/
+fp-info-cache
+*.lck
+*.kicad_prl
+*.round-tracks-config
